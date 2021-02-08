@@ -1,8 +1,8 @@
 package ru.job4j.linked;
 
 public class Node<T> {
-    final private Node<T> next;
-    final private T value;
+    private final Node<T> next;
+    private final T value;
 
     public Node(Node<T> next, T value) {
         this.next = next;
