@@ -14,24 +14,19 @@ public class Wget implements Runnable {
     private static final int ONE_KI_B = 1024;
     private final String url;
     private final int speed;
-    private String fileName;
-
+    private final String fileName;
 
     /**
      *
      * @param url url to file
      * @param speed speed in KiB/s
      */
-    public Wget(String url, int speed) {
+    public Wget(String url, int speed) throws MalformedURLException {
         this.url = url;
         this.speed = speed;
-        try {
-            URL u = new URL(url);
-            fileName = Path.of(u.getPath()).getFileName().toString() + ".get";
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
+        URL u = new URL(url);
+        Path fn = Path.of(u.getPath()).getFileName();
+        fileName = fn == null ? "unknown" : fn.toString() + ".get";
     }
 
     @Override
@@ -65,13 +60,18 @@ public class Wget implements Runnable {
         if (args.length > 0) {
             url = args[0];
         }
-        int speed = 1;
+        int speed = 100;
         if (args.length > 1) {
             speed = Integer.parseInt(args[1]);
         }
-        Thread wget = new Thread(new Wget(url, speed));
-        wget.start();
-        wget.join();
-        System.out.print("\rDownloaded");
+        Thread wget;
+        try {
+            wget = new Thread(new Wget(url, speed));
+            wget.start();
+            wget.join();
+            System.out.print("\rDownloaded");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 }
