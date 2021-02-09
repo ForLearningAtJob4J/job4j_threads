@@ -10,10 +10,10 @@ public class UserStorageTest {
     public void whenTransferFrom1With100To2With200Then1With50And2With250() {
         UserStorage storage = new UserStorage();
 
-        storage.add(new User(1, 100));
-        storage.add(new User(2, 200));
+        assertTrue(storage.add(new User(1, 100)));
+        assertTrue(storage.add(new User(2, 200)));
 
-        storage.transfer(1, 2, 50);
+        assertTrue(storage.transfer(1, 2, 50));
         assertEquals(50, storage.getAmountById(1));
         assertEquals(250, storage.getAmountById(2));
     }
@@ -23,10 +23,10 @@ public class UserStorageTest {
         UserStorage storage = new UserStorage();
 
         User user1 = new User(1, 100);
-        storage.add(user1);
-        storage.add(new User(2, 200));
+        assertTrue(storage.add(user1));
+        assertTrue(storage.add(new User(2, 200)));
 
-        storage.delete(user1);
+        assertTrue(storage.delete(user1));
         assertEquals(1, storage.size());
         assertEquals(200, storage.getAmountById(2));
     }
@@ -36,8 +36,8 @@ public class UserStorageTest {
         UserStorage storage = new UserStorage();
 
         User user1 = new User(1, 100);
-        storage.add(user1);
-        storage.update(new User(1, 300));
+        assertTrue(storage.add(user1));
+        assertTrue(storage.update(new User(1, 300)));
 
         assertEquals(1, storage.size());
         assertEquals(300, storage.getAmountById(1));

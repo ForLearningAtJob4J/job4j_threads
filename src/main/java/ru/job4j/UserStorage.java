@@ -3,36 +3,23 @@ package ru.job4j;
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @ThreadSafe
 public class UserStorage {
     @GuardedBy("this")
-    private final List<User> users = new ArrayList<>();
-
-    private synchronized User findById(int id) {
-        for (User user: users) {
-            if (user.getId() == id) {
-                return user;
-            }
-        }
-        return null;
-    }
+    private final Map<Integer, User> users = new HashMap<>();
 
     public synchronized int size() {
         return users.size();
     }
 
     public synchronized boolean add(User user) {
-        if (findById(user.getId()) != null) {
-            return false;
-        }
-        return users.add(new User(user.getId(), user.getAmount()));
+        return users.putIfAbsent(user.getId(), new User(user.getId(), user.getAmount())) != user;
     }
 
     public synchronized boolean update(User user) {
-        User found = findById(user.getId());
+        User found = users.get(user.getId());
         if (found == null) {
             return false;
         } else {
@@ -42,17 +29,17 @@ public class UserStorage {
     }
 
     public synchronized boolean delete(User user) {
-        return users.remove(findById(user.getId()));
+        return users.remove(user.getId()) != user;
     }
 
     public synchronized int getAmountById(int id) {
-        User found = findById(id);
+        User found = users.get(id);
         return found == null ? 0 : found.getAmount();
     }
 
     public synchronized boolean transfer(int fromId, int toId, int amount) {
-        User source = findById(fromId);
-        User target = findById(toId);
+        User source = users.get(fromId);
+        User target = users.get(toId);
         if (source == null || target == null || source.getAmount() < amount) {
             return false;
         }
