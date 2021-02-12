@@ -2,6 +2,10 @@ package ru.job4j;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.IntStream;
+
 import static org.junit.Assert.*;
 
 public class SimpleBlockingQueueTest {
@@ -64,5 +68,34 @@ public class SimpleBlockingQueueTest {
         producer.join();
         consumer.join();
         assertEquals(0, queue.size());
+    }
+
+    @Test
+    public void whenFetchAllThenGetIt() throws InterruptedException {
+        final CopyOnWriteArrayList<Integer> buffer = new CopyOnWriteArrayList<>();
+        final SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(2, 10_000);
+        Thread producer = new Thread(
+                () -> {
+                    IntStream.range(0, 5).forEach(
+                            queue::offer
+                    );
+                }
+        );
+        producer.start();
+        Thread consumer = new Thread(
+                () -> {
+                    while (queue.size() != 0 || !Thread.currentThread().isInterrupted()) {
+                        Integer i = queue.poll();
+                        if (i != null) {
+                            buffer.add(i);
+                        }
+                    }
+                }
+        );
+        consumer.start();
+        producer.join();
+        consumer.interrupt();
+        consumer.join();
+        assertEquals(Arrays.asList(0, 1, 2, 3, 4), buffer);
     }
 }
