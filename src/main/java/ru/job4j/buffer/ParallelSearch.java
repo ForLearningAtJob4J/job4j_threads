@@ -9,25 +9,25 @@ public class ParallelSearch {
         SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(2, TIMEOUT);
         final Thread consumer = new Thread(
                 () -> {
-                    while (true) {
+                    while (!Thread.currentThread().isInterrupted()) {
                         try {
-                            Thread.sleep(TIMEOUT);
+                            Thread.sleep(500);
                             Integer i = queue.poll();
                             System.out.println(i);
                             if (i == null) {
-                                throw new InterruptedException("Yeah");
+                                Thread.currentThread().interrupt();
                             }
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
-                            break;
                         }
                     }
+                    System.out.println("consumer finished");
                 }
         );
         consumer.start();
         new Thread(
                 () -> {
-                    for (int index = 0; index != 3; index++) {
+                    for (int index = 0; index != 30; index++) {
                         queue.offer(index);
                         try {
                             Thread.sleep(500);
@@ -35,10 +35,13 @@ public class ParallelSearch {
                             e.printStackTrace();
                         }
                     }
+                    System.out.println("producer finished");
                 }
 
         ).start();
-        consumer.join();
+
+        Thread.sleep(10_000);
         consumer.interrupt();
+        System.out.println("main finished");
     }
 }
