@@ -10,19 +10,16 @@ import java.util.Queue;
 public class SimpleBlockingQueue<T> {
     @GuardedBy("this")
     private final Queue<T> queue = new LinkedList<>();
-    private final int timeout;
     private final int upperBound;
 
-    public SimpleBlockingQueue(int upperBound, int timeout) {
+    public SimpleBlockingQueue(int upperBound) {
         this.upperBound = upperBound;
-        this.timeout = timeout;
     }
 
     public synchronized void offer(T value) {
         try {
-            long spentTime = System.currentTimeMillis();
-            while (queue.size() == upperBound && System.currentTimeMillis() - spentTime < timeout) {
-                wait(timeout / 10);
+            if (queue.size() == upperBound) {
+                wait();
             }
             System.out.println("Offered " + value);
             queue.offer(value);
@@ -35,9 +32,8 @@ public class SimpleBlockingQueue<T> {
     public synchronized T poll() {
         T value = null;
         try {
-            long spentTime = System.currentTimeMillis();
-            while (queue.size() == 0 && System.currentTimeMillis() - spentTime < timeout) {
-                wait(timeout / 10);
+            if (queue.size() == 0) {
+                wait();
             }
             value = queue.poll();
             System.out.println("Polled " + value);

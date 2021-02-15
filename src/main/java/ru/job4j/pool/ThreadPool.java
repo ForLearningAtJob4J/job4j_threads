@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 public class ThreadPool {
     static final int SIZE = Runtime.getRuntime().availableProcessors();
     private final List<Thread> threads = new LinkedList<>();
-    private final SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>(SIZE, 100_000_000);
+    private final SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>(SIZE);
 
     public void work(Runnable job) {
         if (threads.size() == 0) {
