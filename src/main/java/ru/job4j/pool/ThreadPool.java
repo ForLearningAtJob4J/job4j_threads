@@ -8,11 +8,9 @@ import java.util.stream.IntStream;
 
 public class ThreadPool {
     static final int SIZE = Runtime.getRuntime().availableProcessors();
-    private final List<Thread> threads = new LinkedList<>();
     private final SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>(SIZE);
-
-    public void work(Runnable job) {
-        if (threads.size() == 0) {
+    private final List<Thread> threads = new LinkedList<>() {
+        {
             IntStream.range(0, SIZE).mapToObj(i -> new Thread(() -> {
                 try {
                     Runnable myJob = tasks.poll();
@@ -22,6 +20,9 @@ public class ThreadPool {
                 }
             })).forEach(threads::add);
         }
+    };
+
+    public void work(Runnable job) {
         tasks.offer(job);
     }
 

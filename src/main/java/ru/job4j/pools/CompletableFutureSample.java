@@ -141,32 +141,32 @@ public class CompletableFutureSample {
 
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
-//        System.out.println("runAsyncExample()");
-//        runAsyncExample();
-//        scanner.next();
+        System.out.println("runAsyncExample()");
+        runAsyncExample();
+        scanner.next();
         System.out.println("supplyAsyncExample()");
         supplyAsyncExample();
         scanner.next();
-//        System.out.println("supplyAsyncExample()");
-//        thenRunExample();
-//        scanner.next();
-//        System.out.println("thenAcceptExample()");
-//        thenAcceptExample();
-//        scanner.next();
-//        System.out.println("thenApplyExample()");
-//        thenApplyExample();
-//        scanner.next();
-//        System.out.println("thenComposeExample()");
-//        thenComposeExample();
-//        scanner.next();
-//        System.out.println("thenCombineExample()");
-//        thenCombineExample();
-//        scanner.next();
-//        System.out.println("allOfExample()");
-//        allOfExample();
-//        scanner.next();
-//        System.out.println("anyOfExample()");
-//        anyOfExample();
-//        System.out.println("That's all!");
+        System.out.println("supplyAsyncExample()");
+        thenRunExample();
+        scanner.next();
+        System.out.println("thenAcceptExample()");
+        thenAcceptExample();
+        scanner.next();
+        System.out.println("thenApplyExample()");
+        thenApplyExample();
+        scanner.next();
+        System.out.println("thenComposeExample()");
+        thenComposeExample();
+        scanner.next();
+        System.out.println("thenCombineExample()");
+        thenCombineExample();
+        scanner.next();
+        System.out.println("allOfExample()");
+        allOfExample();
+        scanner.next();
+        System.out.println("anyOfExample()");
+        anyOfExample();
+        System.out.println("That's all!");
     }
 }
